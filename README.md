@@ -34,7 +34,7 @@ pip install fastapi uvicorn pyzmq requests
 
 5️⃣ Run each communication model
 🧩 Direct Communication (IPC)
-
+TCP:
 Server (aggregator):
 
 python ipc/aggregator_server.py
@@ -44,6 +44,15 @@ Client (driver):
 
 python ipc/driver_client.py
 
+UDP:
+Server (aggregator):
+
+python ipc/aggregator_server_udp.py
+
+In another terminal:
+Client (driver):
+
+python ipc/driver_client_udp.py
 
 You should see driver JSON data arriving at the server.
 
@@ -134,4 +143,5 @@ python pubsub/subscriber_rider.py
 
 
 If you see messages, JSON, or ride events — you’re good.
+
 
