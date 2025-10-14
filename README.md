@@ -39,7 +39,7 @@ Server (aggregator):
 
 python ipc/aggregator_server.py
 
-
+In another terminal:
 Client (driver):
 
 python ipc/driver_client.py
@@ -134,3 +134,4 @@ python pubsub/subscriber_rider.py
 
 
 If you see messages, JSON, or ride events — you’re good.
+
