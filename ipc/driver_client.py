@@ -42,6 +42,6 @@ def simulate_driver(driver_id, start_lat, start_lng):
             time.sleep(1.0)
 
 if __name__ == "__main__":
-    # Example: simulate a driver
+    # Example: simulate a driver driving around Long Beach for example 
     simulate_driver(driver_id="driver-101", start_lat=33.7701, start_lng=-118.1937)
 
