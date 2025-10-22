@@ -1,147 +1,53 @@
-# cecs327-rideshare-comm-systems
-Distributed ride-sharing platform demonstrating interprocess, remote, and message-based communication (CECS 327)
-
-🧭 Project Setup Guide (for Teammates)
-1️⃣ Prerequisites
-
-Make sure you have these installed:
-
-Tool	Minimum Version	Notes
-Python	3.10+	Required for FastAPI, sockets, and ZeroMQ
-Git	Latest	For cloning and version control
-WSL / Linux / macOS	Recommended	Windows users can use WSL2
-pip	Latest	Run python3 -m ensurepip --upgrade if needed
-2️⃣ Clone the repository
-git clone https://github.com/<YOUR_USERNAME>/cecs327-rideshare-comm-systems.git
-cd cecs327-rideshare-comm-systems
-
-3️⃣ Create and activate a virtual environment
-python3 -m venv .venv
-source .venv/bin/activate    # on Linux / WSL
-# OR
-.venv\Scripts\activate       # on Windows PowerShell
+# CECS 327 – RideShare Communication Systems
 
 
-You should now see (.venv) in your terminal prompt.
+## Components and Purpose
 
-4️⃣ Install dependencies
-pip install -r requirements.txt
+| File | Type | Purpose |
+|------|------|----------|
+| `aggregator_server.py` | TCP Server | Central dispatcher that listens for multiple driver updates using sockets and threads. |
+| `driver_client.py` | TCP Client | Simulated driver sending GPS/location/status to the dispatcher over TCP. |
+| `aggregator_server_udp.py` | UDP Listener | Receives quick “fire-and-forget” GPS updates from drivers. |
+| `driver_client_udp.py` | UDP Sender | Sends low-latency GPS pings to the UDP listener. |
+| `routing_service.py` | REST API | Flask web service for passengers to request rides and check ETA. |
+| `demo_client.py` | REST Client | Sends test ride requests to the Flask API. |
+| `publisher_driver.py` | Pub/Sub Publisher | Broadcasts driver updates to subscribers using UDP. |
+| `subscriber_rider.py` | Pub/Sub Subscriber | Receives broadcast messages and prints live driver updates. |
 
+---
 
-If the requirements.txt isn’t generated yet, you can install manually:
+## Requirements
 
-pip install fastapi uvicorn pyzmq requests
+- Python 3.10 or higher  
+- Works best on WSL/Linux (for sockets)  
+- Dependencies:
+  ```bash
+  pip install flask requests
+How to Run Each Module
+TCP (Driver + Dispatcher)
 
-5️⃣ Run each communication model
-🧩 Direct Communication (IPC)
-TCP:
-Server (aggregator):
+Terminal 1:
+python aggregator_server.py
 
-python ipc/aggregator_server.py
+Terminal 2:
+UDP (Low-Latency Updates)
 
-In another terminal:
-Client (driver):
+Terminal 1:
+python aggregator_server_udp.py
 
-python ipc/driver_client.py
+Terminal 2:
+python driver_client_udp.py
+REST API (Flask)
 
-UDP:
-Server (aggregator):
+Terminal 1:
+python routing_service.py
 
-python ipc/aggregator_server_udp.py
+Terminal 2:
+python demo_client.py
+Pub/Sub (Broadcast Model)
 
-In another terminal:
-Client (driver):
+Terminal 1:
+python subscriber_rider.py
 
-python ipc/driver_client_udp.py
-
-You should see driver JSON data arriving at the server.
-
-🌐 Remote Communication (REST API)
-
-Start the API:
-
-uvicorn rest.routing_service:app --reload --host 127.0.0.1 --port 8000
-
-
-Test in another terminal:
-
-curl "http://127.0.0.1:8000/health"
-curl -X POST "http://127.0.0.1:8000/requestRide?pickup=CSULB&dropoff=Downtown"
-
-📡 Indirect Communication (Pub/Sub)
-
-Publisher (driver events):
-
-python pubsub/publisher_driver.py
-
-
-Subscriber (rider app):
-
-python pubsub/subscriber_rider.py
-
-
-Subscribers will print live ride.status updates.
-
-6️⃣ (Optional) Run all modules at once
-
-You can open three terminals:
-
-Run the REST API (uvicorn ...)
-
-Run the aggregator TCP server
-
-Run the publisher/subscriber for live updates
-
-It demonstrates all communication models in action.
-
-7️⃣ Validation & Troubleshooting
-
-If you get ModuleNotFoundError, check that the venv is activated.
-
-If uvicorn isn’t found, reinstall it:
-
-pip install uvicorn
-
-
-If ZeroMQ fails:
-
-pip install pyzmq
-
-
-If a port is already in use, change it in the script (e.g., 5001 → 5002).
-
-8️⃣ Contribution Workflow
-
-Each teammate should:
-
-git pull origin main
-git checkout -b your-branch-name
-# make changes
-git add .
-git commit -m "Added REST endpoints"
-git push origin your-branch-name
-
-
-Then open a Pull Request on GitHub.
-
-9️⃣ Folder Structure
-cecs327-rideshare-comm-systems/
-│
-├── ipc/         # TCP socket communication
-├── rest/        # REST API (FastAPI)
-├── pubsub/      # ZeroMQ publisher/subscriber
-├── docs/        # Report, diagrams, validation logs
-└── README.md
-
-✅ Quick sanity check
-
-Run these commands — you should get output for each:
-
-python ipc/driver_client.py
-curl http://127.0.0.1:8000/health
-python pubsub/subscriber_rider.py
-
-
-If you see messages, JSON, or ride events — you’re good.
-
-
+Terminal 2:
+python publisher_driver.py
