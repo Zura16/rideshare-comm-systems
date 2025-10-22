@@ -42,11 +42,14 @@ def ride_req():
     return jsonify({"status": "ok", "driver_id": closest, "eta_minimum": eta_min})
 #finding eta and returning it
 @app.route("/eta/<driver_id>", methods= ["GET"])
-def the_eta(Dri_id):
-    inf=  Dri.get(Dri_id)
+def the_eta(driver_id):
+    inf = Dri.get(driver_id)
     if inf is None:
         return jsonify({"error": "No driver found"}), 404
-    return jsonify({"driver_id": Dri_id, "available": inf["available"], "ts": time.time()}), 200
-
+    return jsonify({
+        "driver_id": driver_id,
+        "available": inf["available"],
+        "ts": time.time()
+    }), 200
 if __name__ == "__main__":
     app.run(port=5001, debug= True)
