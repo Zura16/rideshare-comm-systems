@@ -40,7 +40,7 @@ py -m pip install -r requirements.txt
 
 ## How to Run Each Module
 
-TCP (Driver + Dispatcher)
+## TCP (Driver + Dispatcher)
 
 ```cmd
 py -m ipc.aggregator_server
@@ -52,7 +52,7 @@ In a second terminal:
 py -m ipc.driver_client
 ```
 
-UDP (Low-Latency Updates)
+## UDP (Low-Latency Updates)
 
 ```cmd
 py -m ipc.aggregator_server_udp
@@ -64,7 +64,7 @@ In a second terminal:
 py -m ipc.driver_client_udp
 ```
 
-REST API (Flask)
+## REST API (Flask)
 
 ```cmd
 py -m rest.routing_service
@@ -76,7 +76,7 @@ In a second terminal:
 py -m rest.demo_client
 ```
 
-Pub/Sub (Broadcast Model)
+## Pub/Sub (Broadcast Model)
 
 ```cmd
 py -m pubsub.subscriber_rider
@@ -91,17 +91,6 @@ py -m pubsub.publisher_driver
 ---
 
 ## Peer-to-Peer (P2P) Communication System
-
-Decentralized discovery and messaging where every node is both a client and server.
-
-- Discovery: periodic UDP multicast “hello” beacons (default `224.0.0.250:50000`).
-- Messaging: direct TCP connections between peers with JSON-line messages.
-- Scalability: any node can join, no central registry.
-- Fault tolerance: unreachable peers are tolerated, stale peers automatically pruned.
-
-Files:
-- `p2p/p2p_node.py` – core P2P logic (discovery, TCP server, broadcast/direct send, pruning)
-- `p2p/vehicle_peer.py` – runnable vehicle simulator sending `location_update` messages
 
 Quick start:
 - Option A (bind to all interfaces, good for LAN testing):
@@ -125,10 +114,6 @@ Alternate runner (core demo):
 ```cmd
 py -m p2p.p2p_node --id veh-X --host 127.0.0.1
 ```
-How discovery works (brief):
-- Each node announces `hello` beacons to the multicast group with its `node_id` and TCP port.
-- Peers update an in-memory table of known nodes, entries expire after inactivity.
-
 ---
 
 ## Testing
@@ -138,4 +123,5 @@ Run unit tests (includes P2P discovery/messaging):
 ```cmd
 py -m unittest -v p2p.test_p2p
 ```
+
 ---
