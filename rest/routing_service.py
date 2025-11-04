@@ -22,11 +22,21 @@ def havers(a_la, a_lon, b_la, b_lo):
 @app.route("/request_ride", methods = ["POST"])
 def ride_req():
     e = request.get_json()
-    userla = float(e.get("lat"))
-    userlon = float( e.get("lon"))
+
+    if e is None or "lat" not in e or "lon" not in e:
+        return jsonify({"error": "Invalid request, lat and lon required"}), 400
+    try:
+        userla = float(e.get("lat"))
+        userlon = float( e.get("lon"))
+
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid lat or lon"}), 400
     #to find the closest driver possible
     closest = None
     mini = 1e9
+
+    if not(-90 <= userla <= 90) or not(-180 <= userlon <= 180):
+        return jsonify({"error": "lat must be between -90 and 90 and lon between -180 and 180"}), 400
 
     for dri_id , inf in Dri.items():
         dis = havers(userla, userlon, inf["lat"], inf["lon"])
