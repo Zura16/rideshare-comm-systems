@@ -29,7 +29,8 @@ TCP (Driver + Dispatcher)
 Terminal 1:
 python aggregator_server.py
 
-Terminal 2:
+Terminal 2: python driver_client.py
+
 UDP (Low-Latency Updates)
 
 Terminal 1:
@@ -37,6 +38,7 @@ python aggregator_server_udp.py
 
 Terminal 2:
 python driver_client_udp.py
+
 REST API (Flask)
 
 Terminal 1:
@@ -51,3 +53,4 @@ python subscriber_rider.py
 
 Terminal 2:
 python publisher_driver.py
+
