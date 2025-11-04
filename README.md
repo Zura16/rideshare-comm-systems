@@ -13,44 +13,129 @@
 | `demo_client.py` | REST Client | Sends test ride requests to the Flask API. |
 | `publisher_driver.py` | Pub/Sub Publisher | Broadcasts driver updates to subscribers using UDP. |
 | `subscriber_rider.py` | Pub/Sub Subscriber | Receives broadcast messages and prints live driver updates. |
+| `p2p/p2p_node.py` | P2P Core | Asyncio peer-to-peer node with UDP multicast discovery and TCP messaging. |
+| `p2p/vehicle_peer.py` | P2P Runner | Vehicle simulator that broadcasts location to nearby peers. |
 
 ---
 
 ## Requirements
 
-- Python 3.10 or higher  
-- Works best on WSL/Linux (for sockets)  
-- Dependencies:
-  ```bash
-  pip install flask requests
-How to Run Each Module
+- Python 3.10 or higher
+- Works on Windows, macOS, and Linux
+- Works best on WSL/Linux (for sockets)
+- Dependencies (minimal, stdlib used for P2P):
+  - Flask (REST), requests (client)
+  - Twisted (optional legacy, not required for P2P)
+  - ```cmd
+    pip install flask requests
+    ```
+
+Install:
+
+```cmd
+py -m pip install -r requirements.txt
+```
+
+---
+
+## How to Run Each Module
+
 TCP (Driver + Dispatcher)
 
-Terminal 1:
-python aggregator_server.py
+```cmd
+py -m ipc.aggregator_server
+```
 
-Terminal 2: python driver_client.py
+In a second terminal:
+
+```cmd
+py -m ipc.driver_client
+```
 
 UDP (Low-Latency Updates)
 
-Terminal 1:
-python aggregator_server_udp.py
+```cmd
+py -m ipc.aggregator_server_udp
+```
 
-Terminal 2:
-python driver_client_udp.py
+In a second terminal:
+
+```cmd
+py -m ipc.driver_client_udp
+```
 
 REST API (Flask)
 
-Terminal 1:
-python routing_service.py
+```cmd
+py -m rest.routing_service
+```
 
-Terminal 2:
-python demo_client.py
+In a second terminal:
+
+```cmd
+py -m rest.demo_client
+```
+
 Pub/Sub (Broadcast Model)
 
-Terminal 1:
-python subscriber_rider.py
+```cmd
+py -m pubsub.subscriber_rider
+```
 
-Terminal 2:
-python publisher_driver.py
+In a second terminal:
 
+```cmd
+py -m pubsub.publisher_driver
+```
+
+---
+
+## Peer-to-Peer (P2P) Communication System
+
+Decentralized discovery and messaging where every node is both a client and server.
+
+- Discovery: periodic UDP multicast “hello” beacons (default `224.0.0.250:50000`).
+- Messaging: direct TCP connections between peers with JSON-line messages.
+- Scalability: any node can join, no central registry.
+- Fault tolerance: unreachable peers are tolerated, stale peers automatically pruned.
+
+Files:
+- `p2p/p2p_node.py` – core P2P logic (discovery, TCP server, broadcast/direct send, pruning)
+- `p2p/vehicle_peer.py` – runnable vehicle simulator sending `location_update` messages
+
+Quick start:
+- Option A (bind to all interfaces, good for LAN testing):
+```cmd
+py -m p2p.vehicle_peer --id veh-A --host 0.0.0.0 --port 0 --mgroup 224.0.0.250 --mport 50000
+```
+In another terminal:
+```cmd
+py -m p2p.vehicle_peer --id veh-B --host 0.0.0.0 --port 0 --mgroup 224.0.0.250 --mport 50000
+```
+- Option B (force loopback, safest if multicast is restricted):
+```cmd
+py -m p2p.vehicle_peer --id veh-A --host 127.0.0.1 --port 0 --mgroup 224.0.0.250 --mport 50000
+```
+And in another terminal:
+```cmd
+py -m p2p.vehicle_peer --id veh-B --host 127.0.0.1 --port 0 --mgroup 224.0.0.250 --mport 50000
+```
+
+Alternate runner (core demo):
+```cmd
+py -m p2p.p2p_node --id veh-X --host 127.0.0.1
+```
+How discovery works (brief):
+- Each node announces `hello` beacons to the multicast group with its `node_id` and TCP port.
+- Peers update an in-memory table of known nodes, entries expire after inactivity.
+
+---
+
+## Testing
+
+Run unit tests (includes P2P discovery/messaging):
+
+```cmd
+py -m unittest -v p2p.test_p2p
+```
+---
