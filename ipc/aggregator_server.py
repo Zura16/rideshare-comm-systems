@@ -64,14 +64,16 @@ def printer():
 def main():
     print(f"[BOOT] Dispatcher listening on {HOST}:{PORT}")
     threading.Thread(target=printer, daemon=True).start()
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind((HOST, PORT))
-        s.listen()
-        while True:
-            conn, addr = s.accept()
-            threading.Thread(target=handle_client, args=(conn, addr), daemon=True).start()
-
+    try: 
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            s.bind((HOST, PORT))
+            s.listen()
+            while True:
+                conn, addr = s.accept()
+                threading.Thread(target=handle_client, args=(conn, addr), daemon=True).start()
+    except KeyboardInterrupt: #
+        print("\n[SHUTDOWN] Server was interrupted.")
 
 if __name__ == "__main__":
     main()
