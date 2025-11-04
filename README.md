@@ -40,7 +40,7 @@ py -m pip install -r requirements.txt
 
 ## How to Run Each Module
 
-## TCP (Driver + Dispatcher)
+<u>TCP (Driver + Dispatcher)</u>
 
 ```cmd
 py -m ipc.aggregator_server
@@ -52,7 +52,7 @@ In a second terminal:
 py -m ipc.driver_client
 ```
 
-## UDP (Low-Latency Updates)
+<u>UDP (Low-Latency Updates)</u>
 
 ```cmd
 py -m ipc.aggregator_server_udp
@@ -64,7 +64,7 @@ In a second terminal:
 py -m ipc.driver_client_udp
 ```
 
-## REST API (Flask)
+<u>REST API (Flask)</u>
 
 ```cmd
 py -m rest.routing_service
@@ -76,7 +76,7 @@ In a second terminal:
 py -m rest.demo_client
 ```
 
-## Pub/Sub (Broadcast Model)
+<u>Pub/Sub (Broadcast Model)</u>
 
 ```cmd
 py -m pubsub.subscriber_rider
@@ -90,9 +90,8 @@ py -m pubsub.publisher_driver
 
 ---
 
-## Peer-to-Peer (P2P) Communication System
+<u>Peer-to-Peer (P2P) Communication System</u>
 
-Quick start:
 - Option A (bind to all interfaces, good for LAN testing):
 ```cmd
 py -m p2p.vehicle_peer --id veh-A --host 0.0.0.0 --port 0 --mgroup 224.0.0.250 --mport 50000
