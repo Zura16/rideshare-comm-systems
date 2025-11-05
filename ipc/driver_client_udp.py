@@ -20,6 +20,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 print(f"[START] Sending UDP updates to {DISPATCHER_HOST}:{DISPATCHER_PORT}")
 
+#socket will completly closed after pressing Ctrl+C as it will catch an interrupt
 try:
     while True:
         # Generate slightly changing position + speed
@@ -42,6 +43,7 @@ try:
 
         # 1 update per second
         time.sleep(1.0)
+
 
 except KeyboardInterrupt:
     print(f"\n[STOP] {DRIVER_ID} shutting down gracefully")
