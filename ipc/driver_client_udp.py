@@ -20,25 +20,31 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 print(f"[START] Sending UDP updates to {DISPATCHER_HOST}:{DISPATCHER_PORT}")
 
-while True:
-    # Generate slightly changing position + speed
-    msg = {
-        "driver_id": DRIVER_ID,
-        "lat": lat + random.uniform(-0.0008, 0.0008),
-        "lng": lng + random.uniform(-0.0008, 0.0008),
-        "speed_kmh": max(0.0, 35 + random.uniform(-5, 5)),
-        "status": status_cycle[i % len(status_cycle)]
-    }
+try:
+    while True:
+        # Generate slightly changing position + speed
+        msg = {
+            "driver_id": DRIVER_ID,
+            "lat": lat + random.uniform(-0.0008, 0.0008),
+            "lng": lng + random.uniform(-0.0008, 0.0008),
+            "speed_kmh": max(0.0, 35 + random.uniform(-5, 5)),
+            "status": status_cycle[i % len(status_cycle)]
+        }
 
-    # Send JSON + newline
-    sock.sendto((json.dumps(msg) + "\n").encode("utf-8"),
-                (DISPATCHER_HOST, DISPATCHER_PORT))
+        # Send JSON + newline
+        sock.sendto((json.dumps(msg) + "\n").encode("utf-8"),
+                    (DISPATCHER_HOST, DISPATCHER_PORT))
 
-    # Simulate motion and update loop counter
-    lat += 0.0009
-    lng += 0.0006
-    i += 1
+        # Simulate motion and update loop counter
+        lat += 0.0009
+        lng += 0.0006
+        i += 1
 
-    # 1 update per second
-    time.sleep(1.0)
+        # 1 update per second
+        time.sleep(1.0)
 
+except KeyboardInterrupt:
+    print(f"\n[STOP] {DRIVER_ID} shutting down gracefully")
+finally:
+    sock.close()
+    print(f"[CLOSED] UDP socket closed for {DRIVER_ID}")
