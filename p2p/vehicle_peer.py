@@ -7,6 +7,22 @@ import time
 from typing import Dict, Any
 
 from .p2p_node import P2PNode
+from .ricart_agrawala import RicartAgrawalaMutex
+
+
+async def cs_worker(node_id: str, mutex: RicartAgrawalaMutex):
+    """Periodically test Ricart–Agrawala critical section logic."""
+    while True:
+        await asyncio.sleep(3)  # wait between CS attempts
+        print(f"[{node_id}] requesting CS...")
+
+        await mutex.request_cs("intersection-A")
+        print(f" >>> [{node_id}] ENTER CS")
+
+        await asyncio.sleep(2)  # simulate work
+
+        print(f" <<< [{node_id}] EXIT CS")
+        await mutex.release_cs("intersection-A")
 
 
 async def run_vehicle(node_id: str, host: str = "0.0.0.0", port: int = 0, mgroup: str = "224.0.0.250", mport: int = 50000) -> None:
@@ -23,6 +39,13 @@ async def run_vehicle(node_id: str, host: str = "0.0.0.0", port: int = 0, mgroup
 
     node.on_message(on_msg)
     await node.start()
+
+    # Initialize Ricart–Agrawala mutual exclusion
+    mutex = RicartAgrawalaMutex(node)
+
+    # Start RA worker in background
+    asyncio.create_task(cs_worker(node_id, mutex))
+
 
     lat, lon = 33.7838, -118.1141
     try:
