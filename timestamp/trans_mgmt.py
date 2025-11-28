@@ -36,30 +36,50 @@ class Lock: ##Honestly unsure on what to name the class
 
          
     
-    def commit():
-        pass 
-
-    def abort(self, requester):
-        for i, (lock, timestamp) in enumerate(self.waiting):
-            if lock == requester:
-                self.waiting.pop(i)
-                print("Process was aborted while it was in the queue.\n")
-                return True
+    def commit(self,requester):
+        if requester != self.active_lock:
+            print("The requester does not hold the lock, therefore cannot commit\n")
+            return False 
         
-        if requester == self.active_lock:
+        self.active_lock = None
+        self.active_timestamp = None
+        print("The lock is now free.\n") 
+
+        if len(self.waiting) > 0: #Processes are still in the queue
+            next_lock, next_timestamp = min(self.waiting, key=lambda x: x[1]) #Get the waiting process with the earliest timestamp
+            self.waiting.remove((next_lock, next_timestamp)) #Removing the next process from waiting list
+
+            self.active_lock = next_lock 
+            self.active_timestamp = next_timestamp
+
+            print("The lock has been committed and the next process in queue is now active. \n")
+        else:
+            print("The lock has been committed and is now free.\n")
+        
+        return True #Lock committed
+
+    def abort(self, requester): #Abort the lock request or release the lock
+        for i, (lock, timestamp) in enumerate(self.waiting): #finding the requester in the waiting list
+            if lock == requester: #Maybe rename lock bc there's too many locks
+                self.waiting.pop(i) #Removing the aborted process from waiting list
+                print("Process was aborted while it was in the queue.\n")
+                return True #Process was aborted
+        
+        if requester == self.active_lock: #Aborting the active process
             print("The process is being aborted while it's active\n")
-            self.active_lock = None
-            self.active_timestamp = None
+            self.active_lock = None #Removing active locks
+            self.active_timestamp = None #Removing active timestamp
         
         if len(self.waiting) > 0:
             next_lock, next_timestamp = min(self.waiting, key=lambda x: x[1]) #Get the waiting process with the earliest timestamp
-            self.waiting.remove((next_lock, next_timestamp))
+            self.waiting.remove((next_lock, next_timestamp)) #Removing the next process from waiting list
 
-            self.active_lock = next_lock
+            self.active_lock = next_lock 
             self.active_timestamp = next_timestamp
 
             print("The process was aborted and the one with the shortest timestamp is now active. \n")
-        else:
+
+        else:#No processes in the queue
             self.active_lock = None
             self.active_timestamp = None
             print("The process was aborted and the lock is now free.\n")
