@@ -45,9 +45,13 @@ def si_dri_wi_lam( drid, stlat,stlng):
                 
                 event =TimestampE(event_type ="gps_update",data= gps_data,tist=tist,id  = drid
                 )
-                
+                msg = {
+                    "event_type": "gps_update",
+                    "lamport_time": tist,
+                    "data": gps_data
+                }
                 # Send as JSON
-                message = json.dumps(event.condic()) + "\n"
+                message = json.dumps(msg) + "\n"
                 s.sendall(message.encode("utf-8"))
                 
                 print(f"{clock} GPS Update sent: ({ gps_data['lat']:.4f}, {gps_data['lng']:.4f}) "

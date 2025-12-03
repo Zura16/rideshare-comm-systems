@@ -6,8 +6,8 @@ import random
 import time
 from typing import Dict, Any
 
-from .p2p_node import P2PNode
-from .ricart_agrawala import RicartAgrawalaMutex
+from p2p_node import P2PNode
+from ricart_agrawala import RicartAgrawalaMutex
 
 
 async def cs_worker(node_id: str, mutex: RicartAgrawalaMutex):

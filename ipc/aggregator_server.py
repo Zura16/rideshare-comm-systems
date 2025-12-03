@@ -72,7 +72,7 @@ def handle_client(conn, addr):
                     msg = json.loads(line.decode("utf-8"))
                     
                     # DEBUG
-                    print(f"[DEBUG] Message type: {msg.get('type', msg.get('event_type'))}")
+                    # print(f"[DEBUG] Message type: {msg.get('type', msg.get('event_type'))}")
                     
                     # Handle ride request FIRST
                     if msg.get("type") == "ride_request":
