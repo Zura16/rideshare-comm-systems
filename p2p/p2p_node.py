@@ -65,6 +65,9 @@ class P2PNode:
         self._peers: Dict[str, PeerInfo] = {}
         self._peers_lock = asyncio.Lock()
         self._on_message: Optional[Callable[[Dict[str, Any]], None]] = None
+        # Ricart-Agrawala handler (set later by RicartAgrawalaMutex)
+        self.ricart = None
+
 
         # Resolved public address for announcements (best-effort)
         detected = self._detect_bind_ip()
@@ -150,6 +153,13 @@ class P2PNode:
                 writer.write((json.dumps({"type": "pong"}) + "\n").encode('utf-8'))
                 await writer.drain()
             else:
+                mtype = data.get("type")
+
+                # Ricart–Agrawala messages
+                if mtype in ("ra_request", "ra_reply") and self.ricart is not None:
+                # Forward to RA logic
+                    asyncio.create_task(self.ricart.handle_message(data))
+                    return
                 if self._on_message:
                     self._on_message(data)
         except (asyncio.TimeoutError, json.JSONDecodeError):
