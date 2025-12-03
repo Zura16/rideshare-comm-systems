@@ -35,7 +35,7 @@ class LamClock:
     
 class TimestampE:
         def __init__( self,event_type, data,tist, id):
-            self.event_t =event_type
+            self.event_type =event_type
             self.data  = data
             self.tist =  tist
             self.id =id
