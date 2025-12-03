@@ -10,13 +10,13 @@ class LamClock:
         self.time = 0
         self.lock = threading.Lock()
 
-    def inc(self):
+    def inccl(self):
         with self.lock:
             self.time +=1
             return  self.time
         
     def send(self):
-        return  self.inc()
+        return  self.inccl()
     
     def updcl( self,  reci):
         with self.lock:
@@ -34,8 +34,8 @@ class LamClock:
         return f"LamportClock(id = '{self.id }', time={ self.time})"
     
 class TimestampE:
-        def __init__(self, event_type, data, tist, id):
-            self.event_type =event_type
+        def __init__( self,event_type, data,tist, id):
+            self.event_t =event_type
             self.data  = data
             self.tist =  tist
             self.id =id
@@ -45,7 +45,7 @@ class TimestampE:
                 return self.tist< other.tist
             return self.id <other.id
         def __str__(self):
-            return f"[T{self.tist}|{self.id}]{self.event_type}: {self.data}"
+            return f"[T{self.tist}|{self.id}]{self.event_t}: {self.data}"
         
         def condic(self):
             return{"event_type":self.event_type, "data":self.data, "lamport_time": self.tist, "id": self.id}
@@ -71,10 +71,10 @@ if __name__ ==  "__main__":
     print(f"Driver initial:  {dri_c}")
     
     # Driver performs local events
-    t1 =dri_c.inc( )
+    t1 =dri_c.inccl( )
     print( f"Driver starts app: {dri_c}")
     
-    t2 =dri_c.inc()
+    t2 =dri_c.inccl()
     print(f"Driver goes online: { dri_c}")
     
     print("\n--- Scenario 2: Message Send/Receive ---")

@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 HOST = "0.0.0.0"  # listen on all interfaces (use "127.0.0.1" for localhost only)
-PORT = 5000
+PORT = 5001
 
 # Keeps the latest state for each driver_id
 driver_state = {}

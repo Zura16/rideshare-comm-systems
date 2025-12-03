@@ -6,12 +6,12 @@ import time
 import random
 import sys
 import os
-from ipc.Lamport_clock import LamClock, TimestampE
+from Lamport_clock import LamClock, TimestampE
 
 
 
 DISPATCHER_HOST =  "127.0.0.1"
-DISPATCHER_PORT= 5000
+DISPATCHER_PORT= 5001
 
 def jit(val, spread= 0.0008):
     
@@ -89,24 +89,25 @@ def si_dri_wi_lam( drid, stlat,stlng):
     finally:
         print(f"{ clock} Disconnected")
 
+
 if __name__ == "__main__":
    
-    if len( sys.argv) < 2:
-        print( "Usage: python gps_lamport_client.py <driver_id> [start_lat] [start_lng]")
-        print( "Example: python gps_lamport_client.py driver-101")
-        sys.exit( 1)
+    if len(sys.argv) < 2:
+        print("Usage: python gps_lamport_client.py <driver_id> [start_lat] [start_lng]")
+        print("Example: python gps_lamport_client.py driver-101")
+        sys.exit(1)
     
-    driver_id=sys.argv[ 1]
-    start_lat=  float(sys.argv[2]) if  len(sys.argv) > 2 else 33.7701
-    start_lng =float(sys.argv[3 ]) if len(sys.argv) > 3 else  -118.1937
+    driver_id = sys.argv[1]
+    start_lat = float(sys.argv[2]) if len(sys.argv) > 2 else 33.7701
+    start_lng = float(sys.argv[3]) if len(sys.argv) > 3 else -118.1937
     
-    start_lat+= random.uniform(-0.01 , 0.01)
-    start_lng +=random.uniform(-0.01,0.01)
+    start_lat += random.uniform(-0.01, 0.01)
+    start_lng += random.uniform(-0.01, 0.01)
     
     print("="*70)
     print(f"DRIVER GPS CLIENT WITH LAMPORT TIMESTAMPS")
-    print(f"Driver ID: { driver_id}")
-    print(f"Starting Position: ({ start_lat:.4f}, {start_lng:.4f})")
+    print(f"Driver ID: {driver_id}")
+    print(f"Starting Position: ({start_lat:.4f}, {start_lng:.4f})")
     print("="*70 + "\n")
     
-    si_dri_wi_lam(driver_id,  start_lat, start_lng)
+    si_dri_wi_lam(driver_id, start_lat, start_lng)
