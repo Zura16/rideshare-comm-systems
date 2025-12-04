@@ -4,6 +4,126 @@ A comprehensive guide to demonstrate the real-time vehicle tracking system with 
 
 ---
 
+## 📐 Architecture Report (Senior Software Architect Perspective)
+
+### 1. Implementation Overview
+
+**Feature Detection**
+- Real‑time vehicle tracking on a Leaflet map with premium dark‑mode UI.
+- Flask‑SocketIO backend exposing HTTP APIs for vehicle position, passenger requests, ride assignment, pickup, and drop‑off.
+- P2P vehicle peers that discover each other via UDP multicast and coordinate via Ricart‑Agrawala mutual exclusion.
+- Passenger simulation (`passenger_sim.py`) that generates up to **10** ride requests with random origins/destinations.
+- Frontend visualises vehicles, passengers, destinations, routes (pickup & destination), status panel, vehicle counter, and a live activity feed.
+
+**Scope**
+- This is a **full‑stack** prototype: Python backend (Flask‑SocketIO) + vanilla JavaScript frontend (Leaflet) + P2P networking layer. It is not a production‑grade service (no DB, auth, scaling), but demonstrates end‑to‑end real‑time rideshare flow.
+
+---
+
+### 2. Tech Stack & Rationale
+
+| Layer | Tool / Library | Why it was likely chosen |
+|-------|----------------|--------------------------|
+| **Backend** | **Flask** | Lightweight, easy to spin up, great for quick demos. |
+| | **Flask‑SocketIO** | Provides WebSocket support with simple `emit` API; integrates with Flask routes. |
+| | **Eventlet** | Enables cooperative multitasking for SocketIO without extra threads. |
+| | **Requests** | Simple HTTP client for vehicle peers to POST position updates and ride state changes. |
+| | **Python 3.10+** | Modern language features (type hints, pattern matching) and async support. |
+| **P2P Layer** | **Custom `p2p_node.py`** | Demonstrates multicast discovery and direct TCP messaging without external dependencies. |
+| | **Ricart‑Agrawala algorithm** (`ricart_agrawala.py`) | Shows distributed mutual exclusion – useful teaching example for critical sections in a P2P fleet. |
+| **Frontend** | **Vanilla JavaScript** | Keeps the demo lightweight; no build step required. |
+| | **Leaflet.js** | Mature, open‑source mapping library; easy to integrate with custom markers and polylines. |
+| | **CSS (custom)** | Implements premium UI (glass‑morphism, dark mode, gradients) without a heavy framework. |
+| **Dev / Packaging** | **requirements.txt** | Pinpointed Python dependencies for reproducible environment. |
+| | **package.json** (mostly empty) | Placeholder for potential future npm tooling. |
+
+**Rationale Summary**: The stack favours simplicity and pedagogical clarity. Flask gives a minimal HTTP+WebSocket server, while the P2P code showcases networking concepts without Docker/Kubernetes overhead. The frontend stays framework‑free to focus on UI/UX rather than build tooling.
+
+---
+
+### 3. Architectural Flow (Mermaid.js)
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        Browser[Web Browser<br/>(Leaflet.js + Socket.IO)]
+    end
+    
+    subgraph "Backend Services"
+        Flask[Flask-SocketIO Server<br/>:5000]
+        RideMgr[Ride Assignment<br/>Engine]
+        PassMgr[Passenger<br/>Manager]
+        VehMgr[Vehicle<br/>Tracker]
+    end
+    
+    subgraph "Vehicle Fleet (P2P Network)"
+        VehA[Vehicle A<br/>Peer Node]
+        VehB[Vehicle B<br/>Peer Node]
+        VehC[Vehicle C<br/>Peer Node]
+    end
+    
+    subgraph "Passenger System"
+        PassSim[Passenger Simulator<br/>(Max 10 requests)]
+    end
+    
+    %% Real-time WebSocket
+    Browser <===>|WebSocket<br/>Real-time Events| Flask
+    
+    %% HTTP API calls from vehicles
+    VehA -->|POST /api/vehicle/position<br/>GPS Updates| VehMgr
+    VehB -->|POST /api/vehicle/position| VehMgr
+    VehC -->|POST /api/vehicle/position| VehMgr
+    
+    VehA -.->|POST /api/ride/pickup| RideMgr
+    VehA -.->|POST /api/ride/dropoff| RideMgr
+    
+    %% Passenger requests
+    PassSim -->|POST /api/passenger/request<br/>(origin + destination)| PassMgr
+    
+    %% Internal server flow
+    VehMgr --> Flask
+    PassMgr --> RideMgr
+    RideMgr -->|emit events| Flask
+    
+    %% Events to frontend
+    Flask -.->|ride_assigned| Browser
+    Flask -.->|destination_routing| Browser
+    Flask -.->|passenger_removed| Browser
+    Flask -.->|vehicle_update| Browser
+    Flask -.->|passenger_update| Browser
+    
+    %% P2P Communication
+    VehA <-.->|UDP Multicast<br/>224.0.0.250:50000| VehB
+    VehB <-.->|UDP Multicast| VehC
+    VehC <-.->|UDP Multicast| VehA
+    
+    VehA ---|TCP<br/>Ricart-Agrawala<br/>Mutex| VehB
+    VehB ---|TCP| VehC
+    
+    %% Styling
+    style Browser fill:#667eea,stroke:#fff,stroke-width:3px,color:#fff
+    style Flask fill:#f093fb,stroke:#fff,stroke-width:3px,color:#fff
+    style RideMgr fill:#f5576c,stroke:#fff,stroke-width:2px,color:#fff
+    style PassMgr fill:#f59e0b,stroke:#fff,stroke-width:2px,color:#fff
+    style VehMgr fill:#06b6d4,stroke:#fff,stroke-width:2px,color:#fff
+    style VehA fill:#10b981,stroke:#fff,stroke-width:2px,color:#fff
+    style VehB fill:#10b981,stroke:#fff,stroke-width:2px,color:#fff
+    style VehC fill:#10b981,stroke:#fff,stroke-width:2px,color:#fff
+    style PassSim fill:#f59e0b,stroke:#fff,stroke-width:2px,color:#fff
+```
+
+**Flow Explanation:**
+1. **Passengers** request rides via `passenger_sim.py` (max 10)
+2. **Ride Manager** assigns nearest available vehicle
+3. **Vehicle peers** navigate to pickup → destination using P2P coordination
+4. **Flask server** broadcasts all state changes via WebSocket
+5. **Frontend** visualizes everything in real-time on Leaflet map
+
+
+---
+
+
+
 ## 📋 Table of Contents
 
 1. [Overview](#overview)

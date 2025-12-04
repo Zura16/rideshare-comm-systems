@@ -9,30 +9,30 @@
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
-    
+
     /* Dark Mode Colors */
     --bg-dark: #0f172a;
     --bg-darker: #020617;
     --surface-dark: rgba(30, 41, 59, 0.5);
     --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
-    
+
     /* Glassmorphism */
     --glass-bg: rgba(30, 41, 59, 0.7);
     --glass-border: rgba(148, 163, 184, 0.2);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    
+
     /* Spacing */
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 1.5rem;
     --spacing-lg: 2rem;
-    
+
     /* Border Radius */
     --radius-sm: 0.5rem;
     --radius-md: 1rem;
     --radius-lg: 1.5rem;
-    
+
     /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
@@ -65,7 +65,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
+    background:
         radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(245, 87, 108, 0.15) 0%, transparent 50%);
     z-index: 0;
@@ -73,8 +73,15 @@ body::before {
 }
 
 @keyframes backgroundPulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 0.8; }
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
 }
 
 /* ============================================
@@ -113,6 +120,7 @@ body::before {
         transform: translateX(100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -169,8 +177,17 @@ body::before {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.2); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
 }
 
 .status-text {
@@ -238,6 +255,7 @@ body::before {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -288,6 +306,7 @@ body::before {
         transform: translateX(-100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -328,12 +347,41 @@ body::before {
 }
 
 @keyframes markerBounce {
-    0% { transform: scale(0); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .custom-marker:hover {
+    transform: scale(1.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.passenger-marker {
+    background: var(--secondary-gradient);
+    border: 3px solid white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all var(--transition-normal);
+    animation: markerBounce 0.5s ease;
+    z-index: 1000;
+    /* Ensure passengers are above or below vehicles as needed */
+}
+
+.passenger-marker:hover {
     transform: scale(1.2);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
@@ -384,14 +432,14 @@ body::before {
         left: var(--spacing-sm);
         min-width: auto;
     }
-    
+
     .branding {
         bottom: var(--spacing-sm);
         left: var(--spacing-sm);
         right: var(--spacing-sm);
         text-align: center;
     }
-    
+
     .update-feed {
         max-height: 150px;
     }
@@ -420,5 +468,7 @@ body::before {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
