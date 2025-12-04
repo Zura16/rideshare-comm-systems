@@ -4,10 +4,34 @@ Vehicle peer runner that uses P2PNode to exchange location/route updates with ne
 import asyncio
 import random
 import time
+import requests
 from typing import Dict, Any
 
-from p2p_node import P2PNode
-from ricart_agrawala import RicartAgrawalaMutex
+from p2p.p2p_node import P2PNode
+from p2p.ricart_agrawala import RicartAgrawalaMutex
+
+# Flask server URL for sending position updates
+FLASK_SERVER_URL = "http://localhost:5000/api/vehicle/position"
+
+
+def send_position_to_server(vehicle_id: str, lat: float, lon: float):
+    """Send vehicle position to Flask server via HTTP POST"""
+    try:
+        response = requests.post(
+            FLASK_SERVER_URL,
+            json={
+                "vehicle_id": vehicle_id,
+                "lat": lat,
+                "lon": lon
+            },
+            timeout=1
+        )
+        if response.status_code == 200:
+            print(f"[{vehicle_id}] Position sent to server: ({lat}, {lon})")
+        else:
+            print(f"[{vehicle_id}] Failed to send position: {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"[{vehicle_id}] Error sending position to server: {e}")
 
 
 async def cs_worker(node_id: str, mutex: RicartAgrawalaMutex):
@@ -54,7 +78,13 @@ async def run_vehicle(node_id: str, host: str = "0.0.0.0", port: int = 0, mgroup
             lat += (random.random() - 0.5) * 0.0005
             lon += (random.random() - 0.5) * 0.0005
             payload = {"lat": round(lat, 6), "lon": round(lon, 6), "ts": time.time()}
+            
+            # Broadcast to P2P peers
             await node.broadcast({"type": "location_update", "payload": payload})
+            
+            # Send to Flask server for frontend display
+            send_position_to_server(node_id, payload["lat"], payload["lon"])
+
             await asyncio.sleep(1.5)
     except KeyboardInterrupt:
         pass

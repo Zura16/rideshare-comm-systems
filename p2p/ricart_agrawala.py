@@ -3,7 +3,7 @@
 import asyncio
 from typing import Dict, Any, Optional, Set
 
-from p2p_node import P2PNode
+from p2p.p2p_node import P2PNode
 
 
 class RicartAgrawalaMutex:
