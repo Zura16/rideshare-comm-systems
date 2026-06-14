@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🚗 Rideshare Comm Systems — Network Protocol Visualizer</title>
+  <meta name="description" content="Interactive visualization of distributed ride-sharing communication protocols: REST, TCP/UDP, P2P with Lamport logical clocks." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Animated background -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow--1"></div>
+  <div class="bg-glow bg-glow--2"></div>
+
+  <!-- ───────── NAV ───────── -->
+  <nav class="topnav">
+    <div class="topnav__brand">
+      <span class="topnav__icon">⚡</span>
+      <span class="topnav__title">RideNet<span class="accent">Viz</span></span>
+    </div>
+    <div class="topnav__links">
+      <a href="#topology">Topology</a>
+      <a href="#compare">Compare</a>
+      <a href="#architecture">Architecture</a>
+      <a href="https://github.com" target="_blank" rel="noopener" class="topnav__gh">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 00-3.8 23.38c.6.12.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61a3.18 3.18 0 00-1.33-1.76c-1.09-.74.08-.73.08-.73a2.52 2.52 0 011.84 1.24 2.56 2.56 0 003.5 1 2.56 2.56 0 01.76-1.61c-2.67-.3-5.47-1.33-5.47-5.93a4.64 4.64 0 011.24-3.22 4.3 4.3 0 01.12-3.18s1-.33 3.3 1.23a11.38 11.38 0 016 0c2.28-1.56 3.29-1.23 3.29-1.23a4.3 4.3 0 01.12 3.18 4.64 4.64 0 011.23 3.22c0 4.61-2.8 5.63-5.48 5.92a2.87 2.87 0 01.82 2.23v3.29c0 .32.21.7.82.58A12 12 0 0012 .3z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </nav>
+
+  <!-- ───────── HERO ───────── -->
+  <header class="hero" id="hero">
+    <div class="hero__badge">Distributed Systems Simulation</div>
+    <h1 class="hero__title">🚗 Rideshare Comm Systems</h1>
+    <p class="hero__sub">Interactive visualization of <span class="accent">REST</span>, <span class="accent">TCP/UDP</span>, and <span class="accent">P2P</span> protocols with Lamport logical clocks</p>
+    <div class="hero__stats">
+      <div class="stat">
+        <span class="stat__val" id="stat-messages">0</span>
+        <span class="stat__label">Messages Sent</span>
+      </div>
+      <div class="stat">
+        <span class="stat__val" id="stat-nodes">5</span>
+        <span class="stat__label">Active Nodes</span>
+      </div>
+      <div class="stat">
+        <span class="stat__val" id="stat-clock">0</span>
+        <span class="stat__label">Max Clock</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ───────── MAIN SECTION ───────── -->
+  <main>
+    <!-- Protocol Tabs -->
+    <section class="section" id="topology">
+      <div class="section__header">
+        <h2 class="section__title">Network Topology</h2>
+        <p class="section__sub">Select a protocol layer to visualize different communication patterns</p>
+      </div>
+
+      <div class="protocol-tabs">
+        <button class="tab active" data-proto="rest">
+          <span class="tab__icon">🌐</span>
+          <span class="tab__name">REST API</span>
+          <span class="tab__desc">Client → Server</span>
+        </button>
+        <button class="tab" data-proto="tcp">
+          <span class="tab__icon">🔌</span>
+          <span class="tab__name">TCP / UDP</span>
+          <span class="tab__desc">Socket Streams</span>
+        </button>
+        <button class="tab" data-proto="p2p">
+          <span class="tab__icon">🔗</span>
+          <span class="tab__name">P2P Mesh</span>
+          <span class="tab__desc">Direct Discovery</span>
+        </button>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button class="btn btn--primary" id="btn-request">
+          <span class="btn__pulse"></span>
+          🚀 Request Ride
+        </button>
+        <button class="btn btn--secondary" id="btn-reset">↻ Reset</button>
+        <button class="btn btn--secondary" id="btn-auto">▶ Auto-Play</button>
+        <div class="controls__info">
+          <span class="dot dot--live"></span>
+          <span id="proto-label">REST API</span> mode
+        </div>
+      </div>
+
+      <!-- Canvas Area -->
+      <div class="topology-wrapper">
+        <div class="topology" id="topology-canvas">
+          <svg class="topology__svg" id="svg-lines" xmlns="http://www.w3.org/2000/svg"></svg>
+          <!-- Nodes injected by JS -->
+        </div>
+        <!-- Payload Preview Tooltip -->
+        <div class="payload-tooltip" id="payload-tooltip"></div>
+      </div>
+
+      <!-- Message Log -->
+      <div class="log-panel">
+        <div class="log-panel__header">
+          <h3>📡 Message Log</h3>
+          <button class="btn btn--small" id="btn-clear-log">Clear</button>
+        </div>
+        <div class="log-panel__body" id="message-log">
+          <div class="log-empty">No messages yet — click <strong>Request Ride</strong> to start a simulation.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── COMPARE ───────── -->
+    <section class="section" id="compare">
+      <div class="section__header">
+        <h2 class="section__title">Compare Protocols</h2>
+        <p class="section__sub">Side-by-side view of all three communication patterns</p>
+      </div>
+      <div class="compare-grid">
+        <!-- REST -->
+        <div class="compare-card">
+          <div class="compare-card__head">
+            <span class="compare-card__icon">🌐</span>
+            <h3>REST API</h3>
+          </div>
+          <div class="compare-card__body">
+            <div class="compare-card__flow">
+              <div class="flow-step">📱 Rider</div>
+              <div class="flow-arrow">→ POST /ride</div>
+              <div class="flow-step">🖥️ Server</div>
+              <div class="flow-arrow">→ ASSIGN</div>
+              <div class="flow-step">🚗 Driver</div>
+            </div>
+            <ul class="compare-card__list">
+              <li><span class="tag tag--green">HTTP/1.1</span> Request / Response</li>
+              <li>Centralized routing via server</li>
+              <li>JSON payloads with status codes</li>
+              <li>Stateless — each request is independent</li>
+            </ul>
+            <div class="compare-card__metrics">
+              <div class="metric"><span class="metric__val">3</span><span class="metric__lbl">Hops</span></div>
+              <div class="metric"><span class="metric__val">~120ms</span><span class="metric__lbl">Latency</span></div>
+              <div class="metric"><span class="metric__val">High</span><span class="metric__lbl">Reliability</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- TCP/UDP -->
+        <div class="compare-card">
+          <div class="compare-card__head">
+            <span class="compare-card__icon">🔌</span>
+            <h3>TCP / UDP</h3>
+          </div>
+          <div class="compare-card__body">
+            <div class="compare-card__flow">
+              <div class="flow-step">📱 Rider</div>
+              <div class="flow-arrow">→ SYN</div>
+              <div class="flow-step">🖥️ Server</div>
+              <div class="flow-arrow">→ ACK</div>
+              <div class="flow-step">🚗 Driver</div>
+            </div>
+            <ul class="compare-card__list">
+              <li><span class="tag tag--blue">TCP</span> Reliable streams + <span class="tag tag--orange">UDP</span> fast datagrams</li>
+              <li>Persistent socket connections</li>
+              <li>Binary frame protocol</li>
+              <li>Connection state: SYN → ACK → DATA</li>
+            </ul>
+            <div class="compare-card__metrics">
+              <div class="metric"><span class="metric__val">2-3</span><span class="metric__lbl">Hops</span></div>
+              <div class="metric"><span class="metric__val">~45ms</span><span class="metric__lbl">Latency</span></div>
+              <div class="metric"><span class="metric__val">Mixed</span><span class="metric__lbl">Reliability</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- P2P -->
+        <div class="compare-card">
+          <div class="compare-card__head">
+            <span class="compare-card__icon">🔗</span>
+            <h3>P2P Mesh</h3>
+          </div>
+          <div class="compare-card__body">
+            <div class="compare-card__flow">
+              <div class="flow-step">📱 Rider</div>
+              <div class="flow-arrow">→ DISCOVER</div>
+              <div class="flow-step">🚗 Driver</div>
+              <div class="flow-arrow">→ DIRECT</div>
+              <div class="flow-step">📱 Rider</div>
+            </div>
+            <ul class="compare-card__list">
+              <li><span class="tag tag--purple">DHT</span> Distributed hash table lookup</li>
+              <li>No central server required</li>
+              <li>Direct peer connections</li>
+              <li>Gossip protocol for discovery</li>
+            </ul>
+            <div class="compare-card__metrics">
+              <div class="metric"><span class="metric__val">1</span><span class="metric__lbl">Hops</span></div>
+              <div class="metric"><span class="metric__val">~20ms</span><span class="metric__lbl">Latency</span></div>
+              <div class="metric"><span class="metric__val">Varies</span><span class="metric__lbl">Reliability</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── ARCHITECTURE ───────── -->
+    <section class="section" id="architecture">
+      <div class="section__header">
+        <h2 class="section__title">Layered Architecture</h2>
+        <p class="section__sub">How the communication stack is structured</p>
+      </div>
+      <div class="arch-grid">
+        <div class="arch-layer arch-layer--app">
+          <div class="arch-layer__badge">Layer 3</div>
+          <h3>Application Layer</h3>
+          <p>REST API endpoints for ride requests, driver matching, and status updates. JSON serialization with HTTP verbs (GET, POST, PUT).</p>
+          <div class="arch-layer__tech">
+            <span class="chip">REST</span><span class="chip">JSON</span><span class="chip">HTTP/1.1</span>
+          </div>
+        </div>
+        <div class="arch-layer arch-layer--transport">
+          <div class="arch-layer__badge">Layer 2</div>
+          <h3>Transport Layer</h3>
+          <p>TCP for reliable ordered delivery of ride confirmations. UDP for real-time location broadcasts with minimal overhead.</p>
+          <div class="arch-layer__tech">
+            <span class="chip">TCP</span><span class="chip">UDP</span><span class="chip">Sockets</span>
+          </div>
+        </div>
+        <div class="arch-layer arch-layer--network">
+          <div class="arch-layer__badge">Layer 1</div>
+          <h3>Network / P2P Layer</h3>
+          <p>Peer-to-peer mesh for direct rider-driver communication. DHT-based discovery eliminates single points of failure.</p>
+          <div class="arch-layer__tech">
+            <span class="chip">P2P</span><span class="chip">DHT</span><span class="chip">Gossip</span>
+          </div>
+        </div>
+        <div class="arch-layer arch-layer--clock">
+          <div class="arch-layer__badge">Cross-cutting</div>
+          <h3>Lamport Logical Clocks</h3>
+          <p>Every node maintains a logical clock. On send: clock++. On receive: clock = max(local, received) + 1. Ensures causal ordering across the distributed system.</p>
+          <div class="arch-layer__tech">
+            <span class="chip">Lamport</span><span class="chip">Causal Order</span><span class="chip">Vector Clocks</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ───────── FOOTER ───────── -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p>Built for <strong>Rideshare Comm Systems</strong> — Distributed Systems Protocol Visualizer</p>
+      <p class="footer__copy">© 2026 · <a href="https://github.com" target="_blank" rel="noopener">View on GitHub</a></p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
