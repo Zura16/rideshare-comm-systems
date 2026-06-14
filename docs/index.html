@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🚗 Rideshare Comm Systems — Network Protocol Visualizer</title>
+  <title>Rideshare Comm Systems — Network Protocol Visualizer</title>
   <meta name="description" content="Interactive visualization of distributed ride-sharing communication protocols: REST, TCP/UDP, P2P with Lamport logical clocks." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,7 +19,7 @@
   <!-- ───────── NAV ───────── -->
   <nav class="topnav">
     <div class="topnav__brand">
-      <span class="topnav__icon">⚡</span>
+      <span class="topnav__icon"></span>
       <span class="topnav__title">RideNet<span class="accent">Viz</span></span>
     </div>
     <div class="topnav__links">
@@ -36,7 +36,7 @@
   <!-- ───────── HERO ───────── -->
   <header class="hero" id="hero">
     <div class="hero__badge">Distributed Systems Simulation</div>
-    <h1 class="hero__title">🚗 Rideshare Comm Systems</h1>
+    <h1 class="hero__title">Rideshare Comm Systems</h1>
     <p class="hero__sub">Interactive visualization of <span class="accent">REST</span>, <span class="accent">TCP/UDP</span>, and <span class="accent">P2P</span> protocols with Lamport logical clocks</p>
     <div class="hero__stats">
       <div class="stat">
@@ -65,17 +65,17 @@
 
       <div class="protocol-tabs">
         <button class="tab active" data-proto="rest">
-          <span class="tab__icon">🌐</span>
+          <span class="tab__icon"></span>
           <span class="tab__name">REST API</span>
           <span class="tab__desc">Client → Server</span>
         </button>
         <button class="tab" data-proto="tcp">
-          <span class="tab__icon">🔌</span>
+          <span class="tab__icon"></span>
           <span class="tab__name">TCP / UDP</span>
           <span class="tab__desc">Socket Streams</span>
         </button>
         <button class="tab" data-proto="p2p">
-          <span class="tab__icon">🔗</span>
+          <span class="tab__icon"></span>
           <span class="tab__name">P2P Mesh</span>
           <span class="tab__desc">Direct Discovery</span>
         </button>
@@ -85,7 +85,7 @@
       <div class="controls">
         <button class="btn btn--primary" id="btn-request">
           <span class="btn__pulse"></span>
-          🚀 Request Ride
+          Request Ride
         </button>
         <button class="btn btn--secondary" id="btn-reset">↻ Reset</button>
         <button class="btn btn--secondary" id="btn-auto">▶ Auto-Play</button>
@@ -108,7 +108,7 @@
       <!-- Message Log -->
       <div class="log-panel">
         <div class="log-panel__header">
-          <h3>📡 Message Log</h3>
+          <h3>Message Log</h3>
           <button class="btn btn--small" id="btn-clear-log">Clear</button>
         </div>
         <div class="log-panel__body" id="message-log">
@@ -127,16 +127,16 @@
         <!-- REST -->
         <div class="compare-card">
           <div class="compare-card__head">
-            <span class="compare-card__icon">🌐</span>
+            <span class="compare-card__icon"></span>
             <h3>REST API</h3>
           </div>
           <div class="compare-card__body">
             <div class="compare-card__flow">
-              <div class="flow-step">📱 Rider</div>
+              <div class="flow-step">Rider</div>
               <div class="flow-arrow">→ POST /ride</div>
-              <div class="flow-step">🖥️ Server</div>
+              <div class="flow-step">Server</div>
               <div class="flow-arrow">→ ASSIGN</div>
-              <div class="flow-step">🚗 Driver</div>
+              <div class="flow-step">Driver</div>
             </div>
             <ul class="compare-card__list">
               <li><span class="tag tag--green">HTTP/1.1</span> Request / Response</li>
@@ -154,16 +154,16 @@
         <!-- TCP/UDP -->
         <div class="compare-card">
           <div class="compare-card__head">
-            <span class="compare-card__icon">🔌</span>
+            <span class="compare-card__icon"></span>
             <h3>TCP / UDP</h3>
           </div>
           <div class="compare-card__body">
             <div class="compare-card__flow">
-              <div class="flow-step">📱 Rider</div>
+              <div class="flow-step">Rider</div>
               <div class="flow-arrow">→ SYN</div>
-              <div class="flow-step">🖥️ Server</div>
+              <div class="flow-step">Server</div>
               <div class="flow-arrow">→ ACK</div>
-              <div class="flow-step">🚗 Driver</div>
+              <div class="flow-step">Driver</div>
             </div>
             <ul class="compare-card__list">
               <li><span class="tag tag--blue">TCP</span> Reliable streams + <span class="tag tag--orange">UDP</span> fast datagrams</li>
@@ -181,16 +181,16 @@
         <!-- P2P -->
         <div class="compare-card">
           <div class="compare-card__head">
-            <span class="compare-card__icon">🔗</span>
+            <span class="compare-card__icon"></span>
             <h3>P2P Mesh</h3>
           </div>
           <div class="compare-card__body">
             <div class="compare-card__flow">
-              <div class="flow-step">📱 Rider</div>
+              <div class="flow-step">Rider</div>
               <div class="flow-arrow">→ DISCOVER</div>
-              <div class="flow-step">🚗 Driver</div>
+              <div class="flow-step">Driver</div>
               <div class="flow-arrow">→ DIRECT</div>
-              <div class="flow-step">📱 Rider</div>
+              <div class="flow-step">Rider</div>
             </div>
             <ul class="compare-card__list">
               <li><span class="tag tag--purple">DHT</span> Distributed hash table lookup</li>

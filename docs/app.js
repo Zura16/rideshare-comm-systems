@@ -32,11 +32,11 @@
 
   // ─── Node Configurations ───
   const nodes = {
-    alice:   { id: 'alice',   name: 'Rider: Alice',   type: 'rider',  icon: '📱', x: 15, y: 30, clock: 0 },
-    bob:     { id: 'bob',     name: 'Rider: Bob',     type: 'rider',  icon: '📱', x: 15, y: 70, clock: 0 },
-    server:  { id: 'server',  name: 'Central Server', type: 'server', icon: '🖥️', x: 50, y: 50, clock: 0 },
-    charlie: { id: 'charlie', name: 'Driver: Charlie',type: 'driver', icon: '🚗', x: 85, y: 30, clock: 0 },
-    dave:    { id: 'dave',    name: 'Driver: Dave',   type: 'driver', icon: '🚗', x: 85, y: 70, clock: 0 }
+    alice:   { id: 'alice',   name: 'Rider: Alice',   type: 'rider',  icon: '', x: 15, y: 30, clock: 0 },
+    bob:     { id: 'bob',     name: 'Rider: Bob',     type: 'rider',  icon: '', x: 15, y: 70, clock: 0 },
+    server:  { id: 'server',  name: 'Central Server', type: 'server', icon: '', x: 50, y: 50, clock: 0 },
+    charlie: { id: 'charlie', name: 'Driver: Charlie',type: 'driver', icon: '', x: 85, y: 30, clock: 0 },
+    dave:    { id: 'dave',    name: 'Driver: Dave',   type: 'driver', icon: '', x: 85, y: 70, clock: 0 }
   };
 
   // ─── Initialize Nodes in DOM ───
@@ -173,9 +173,9 @@
   // ─── Node Details Modal/Tooltip ───
   function showNodeDetails(node) {
     const details = {
-      rider: `👤 Type: Rider Node\n⏰ Clock: ${node.clock}\n📡 Comm Type: Async REST Requests / Sockets`,
-      driver: `🚗 Type: Driver Node\n⏰ Clock: ${node.clock}\n📡 Location Broadcast interval: ~5s`,
-      server: `🖥️ Type: Central Matching Server\n⏰ Clock: ${node.clock}\n📂 State: Active Connections, Driver Queue`
+      rider: `Type: Rider Node\nClock: ${node.clock}\n Comm Type: Async REST Requests / Sockets`,
+      driver: `Type: Driver Node\nClock: ${node.clock}\n Location Broadcast interval: ~5s`,
+      server: `Type: Central Matching Server\nClock: ${node.clock}\nState: Active Connections, Driver Queue`
     };
     alert(`Node: ${node.name}\n\n${details[node.type]}`);
   }
